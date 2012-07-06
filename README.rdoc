@@ -1,0 +1,116 @@
+= Puppet module: snmp
+
+This is a Puppet module for snmp based on the second generation layout ("NextGen") of Example42 Puppet Modules.
+
+Made by Romain THERRAT / Carpe-Hora
+
+Official site: http://www.example42.com
+
+Official git repository: http://github.com/lermit/puppet-snmp
+
+Released under the terms of Apache 2 License.
+
+This module requires functions provided by the Example42 Puppi module (you need it even if you don't use and install Puppi)
+
+For detailed info about the logic and usage patterns of Example42 modules check the DOCS directory on Example42 main modules set.
+
+== USAGE - Basic management
+
+* Install snmp with default settings
+
+        class { 'snmp': }
+
+* Install a specific version of snmp package
+
+        class { 'snmp':
+          version => '1.0.1',
+        }
+
+* Disable snmp service.
+
+        class { 'snmp':
+          disable => true
+        }
+
+* Remove snmp package
+
+        class { 'snmp':
+          absent => true
+        }
+
+* Enable auditing without without making changes on existing snmp configuration files
+
+        class { 'snmp':
+          audit_only => true
+        }
+
+* Set community. Default is 'public'
+
+        class { 'snmp':
+          community => 'my-comm',
+        }
+
+* Set where to listen. Default is '127.0.0.1'
+
+        class { 'snmp':
+          community => '192.168.1.0/24',
+        }
+
+== USAGE - Overrides and Customizations
+* Use custom sources for main config file
+
+        class { 'snmp':
+          source => [ "puppet:///modules/lab42/snmp/snmp.conf-${hostname}" , "puppet:///modules/lab42/snmp/snmp.conf" ],
+        }
+
+
+* Use custom source directory for the whole configuration dir
+
+        class { 'snmp':
+          source_dir       => 'puppet:///modules/lab42/snmp/conf/',
+          source_dir_purge => false, # Set to true to purge any existing file not present in $source_dir
+        }
+
+* Use custom template for main config file. Note that template and source arguments are alternative.
+
+        class { 'snmp':
+          template => 'example42/snmp/snmp.conf.erb',
+        }
+
+* Automatically include a custom subclass
+
+        class { 'snmp':
+          my_class => 'snmp::example42',
+        }
+
+
+== USAGE - Example42 extensions management
+* Activate puppi (recommended, but disabled by default)
+
+        class { 'snmp':
+          puppi    => true,
+        }
+
+* Activate puppi and use a custom puppi_helper template (to be provided separately with a puppi::helper define ) to customize the output of puppi commands
+
+        class { 'snmp':
+          puppi        => true,
+          puppi_helper => 'myhelper',
+        }
+
+* Activate automatic monitoring (recommended, but disabled by default). This option requires the usage of Example42 monitor and relevant monitor tools modules
+
+        class { 'snmp':
+          monitor      => true,
+          monitor_tool => [ 'nagios' , 'monit' , 'munin' ],
+        }
+
+* Activate automatic firewalling. This option requires the usage of Example42 firewall and relevant firewall tools modules
+
+        class { 'snmp':
+          firewall      => true,
+          firewall_tool => 'iptables',
+          firewall_src  => '10.42.0.0/24',
+          firewall_dst  => $ipaddress_eth0,
+        }
+
