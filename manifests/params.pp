@@ -30,6 +30,7 @@ class snmp::params {
   }
 
   $service_status = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => false,
     default => true,
   }
 
