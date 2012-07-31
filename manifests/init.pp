@@ -404,12 +404,14 @@ class snmp (
 
   ### Service monitoring, if enabled ( monitor => true )
   if $snmp::bool_monitor == true {
-    monitor::port { "snmp_${snmp::protocol}_${snmp::port}":
-      protocol => $snmp::protocol,
-      port     => $snmp::port,
-      target   => $snmp::monitor_target,
-      tool     => $snmp::monitor_tool,
-      enable   => $snmp::manage_monitor,
+    if $snmp::protocol == 'tcp' {
+      monitor::port { "snmp_${snmp::protocol}_${snmp::port}":
+        protocol => $snmp::protocol,
+        port     => $snmp::port,
+        target   => $snmp::monitor_target,
+        tool     => $snmp::monitor_tool,
+        enable   => $snmp::manage_monitor,
+      }
     }
     monitor::process { 'snmp_process':
       process  => $snmp::process,
